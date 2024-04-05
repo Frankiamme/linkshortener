@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import ClipboardJS from "clipboard";
-// import { string } from "Yup";
 import processURL from "./lib";
-import pattern from "./regexPattern";
+import URLvalidator from "./URLvalidator";
 import "./App.css";
 
 /* 
@@ -10,15 +9,6 @@ initialize a new clipboard instance.
 This will be used for the copy button after shortened link has been generated
 */
 new ClipboardJS(".btn");
-
-/* 
-Yup has been used for url checking.
-The input is tested for validity using a regex decalred in regexPattern.js and 
-a custom message returned incase of errors
-*/
-const urlSchema = string()
-  .required("Enter a URL to shorten")
-  .matches(pattern, "The url is invalid. Try again");
 
 function App() {
   const [longurl, setlongurl] = useState("");
@@ -40,6 +30,7 @@ function App() {
   useEffect(() => {
     const resultshortURL = JSON.parse(localStorage.getItem("shortURL"));
     const resultlongURL = JSON.parse(localStorage.getItem("longURL"));
+    console.log(resultshortURL + "this data data" + resultlongURL);
     if (resultshortURL && resultlongURL) {
       setShortUrl(resultshortURL);
       seturlLongLocal(resultlongURL);
@@ -55,7 +46,7 @@ function App() {
   */
   const validateEntry = async (val) => {
     try {
-      await urlSchema.validate(val);
+      await URLvalidator.validate(val);
       setErrorMessage("");
       return true;
     } catch (error) {
@@ -103,7 +94,7 @@ function App() {
           <>
             <p className="read-the-docs">{`Your Shortened URL for ${urlLongLocal} is:`}</p>
             <div>
-              <input readOnly="true" value={shortUrl} className="input" />
+              <input readOnly={true} value={shortUrl} className="input" />
               <button className="btn" data-clipboard-text={shortUrl}>
                 {`Copy`}
               </button>
