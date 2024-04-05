@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ClipboardJS from "clipboard";
-import { string } from "Yup";
+// import { string } from "Yup";
 import processURL from "./lib";
 import pattern from "./regexPattern";
 import "./App.css";
