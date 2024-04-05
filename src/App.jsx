@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ClipboardJS from "clipboard";
 import processURL from "./lib";
-import URLvalidator from "./URLvalidator";
+import pattern from "./regexPattern";
 import "./App.css";
 
 /* 
@@ -44,20 +44,24 @@ function App() {
   /* If input validation is successful, a truthy value is returned, 
   otherwise an error is thrown 
   */
-  const validateEntry = async (val) => {
-    try {
-      await URLvalidator.validate(val);
-      setErrorMessage("");
-      return true;
-    } catch (error) {
-      setErrorMessage(error.message);
+  const validateEntry = (val) => {
+    if (pattern.test(val) === true) {
+      setErrorMessage("")
+      return true
+    } else {
+      setErrorMessage("Url entered is invalid")
+      return false
     }
   };
 
   //function to handle short link generation upon submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validated = await validateEntry(longurl);
+    if (longurl.length < 1) {
+      setErrorMessage("The URL is a required field")
+      return;
+    }
+    const validated = validateEntry(longurl);
     if (validated) {
       const { link } = await processURL(longurl);
       setShortUrl(link);
@@ -74,6 +78,7 @@ function App() {
       <div className="card">
         <div className="form">
           <input
+            required={true}
             value={longurl}
             onChange={handleChange}
             className="input"
