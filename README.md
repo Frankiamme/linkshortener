@@ -1,8 +1,42 @@
-# React + Vite
+# DevProjects - Link shortener website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is an open source project from [DevProjects](http://www.codementor.io/projects). Feedback and questions are welcome!
+Find the project requirements here: [Link shortener website](https://www.codementor.io/projects/web/link-shortener-website-brqjanf6zq)
 
-Currently, two official plugins are available:
+## Tech/framework used
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Built with Vite/React
+
+## Screenshots and demo
+
+### Screenshot
+
+This is what you'll see when you run the project.
+
+![1712323853042](https://file+.vscode-resource.vscode-cdn.net/Users/frankwillis/Projects/learning/linkshortener/image/README/1712323853042.png "Project page")
+
+### Demo
+
+
+## Installation
+
+### Prerequisites:
+
+Node JS v20
+
+A bit.ly account.
+
+### Installation
+
+Clone the project and  run `npm install`
+
+Create .env files from the .envexample file filling it with your own values.
+
+The VITE_BITLY_TOKEN and VITE_GROUP_GUID keys can be found from bit.ly.
+
+You can then do `npm run dev` to start you local server. Happy testing 😃
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
+Most open source projects use the MIT license. Feel free to choose whichever license you prefer.
