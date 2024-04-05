@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ClipboardJS from "clipboard";
-import * as Yup from "Yup";
+import { string } from "Yup";
 import processURL from "./lib";
 import pattern from "./regexPattern";
 import "./App.css";
@@ -16,7 +16,7 @@ Yup has been used for url checking.
 The input is tested for validity using a regex decalred in regexPattern.js and 
 a custom message returned incase of errors
 */
-const urlSchema = Yup.string()
+const urlSchema = string()
   .required("Enter a URL to shorten")
   .matches(pattern, "The url is invalid. Try again");
 
