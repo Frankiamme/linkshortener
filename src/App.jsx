@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ClipboardJS from "clipboard";
-import processURL from "./lib";
+import { getLimit, shortenURL } from "./lib";
 import pattern from "./regexPattern";
 import "./App.css";
 
@@ -15,6 +15,7 @@ function App() {
   const [shortUrl, setShortUrl] = useState("");
   const [urlLongLocal, seturlLongLocal] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [ApiLimit, setApiLimit] = useState(0);
 
   /*
   Store items in the local storage when the short url is generated
@@ -30,16 +31,21 @@ function App() {
   useEffect(() => {
     const resultshortURL = JSON.parse(localStorage.getItem("shortURL"));
     const resultlongURL = JSON.parse(localStorage.getItem("longURL"));
-    console.log(resultshortURL + "this data data" + resultlongURL);
     if (resultshortURL && resultlongURL) {
       setShortUrl(resultshortURL);
       seturlLongLocal(resultlongURL);
     }
+    checklimit();
   }, []);
 
   const handleChange = (e) => {
     setlongurl(e.target.value);
   };
+
+  const checklimit = async () => {
+    const limit = await getLimit();
+    // setApiLimit(limit);
+  }; 
 
   /* If input validation is successful, a truthy value is returned, 
   otherwise an error is thrown 
@@ -61,9 +67,13 @@ function App() {
       setErrorMessage("The URL is a required field")
       return;
     }
+    if (ApiLimit < 1) {
+      setErrorMessage("Requests limit exceeded, shortener will not work :(")
+      return;
+    }
     const validated = validateEntry(longurl);
     if (validated) {
-      const { link } = await processURL(longurl);
+      const { link } = await shortenURL(longurl);
       setShortUrl(link);
       seturlLongLocal(longurl);
     }
