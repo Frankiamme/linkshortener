@@ -44,7 +44,7 @@ function App() {
 
   const checklimit = async () => {
     const limit = await getLimit();
-    // setApiLimit(limit);
+    setApiLimit(limit);
   }; 
 
   /* If input validation is successful, a truthy value is returned, 
