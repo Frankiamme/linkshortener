@@ -9,3 +9,9 @@
 - The Screenshots aren't displaying, it looks the the URL is not fetching the
   image
 - Checkout this template, [Readme Template](https://gist.github.com/martensonbj/6bf2ec2ed55f5be723415ea73c4557c4)
+
+# App.jsx
+- It is highly discouraged to perform DOM manipulation in ReactJs i.e. `new
+  ClipboardJS(".btn");` The '.btn' is treated a selector by the ClipboardJS
+  lib. You have a look [this](git@github.com:nkbt/react-copy-to-clipboard.git), I think it is a better option
+- 
