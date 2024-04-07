@@ -18,3 +18,8 @@
 > If you want a cleaner way of persisting state, checkout this [lib](https://github.com/rt2zz/redux-persist)
 - Rate limits documentation
   - ![Rate Limit](./image/README/pic-selected-240407-1152-29.png)
+- We can modularize our app into 2 components i.e.
+  - form
+  - card
+- Let's use the form elemement `<form></form>` instead for the `div` element,
+  this will make the app more accessible
