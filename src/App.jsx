@@ -19,7 +19,7 @@ function App() {
   /**
    * Store items in the local storage when the short url is generated
    *
-   * I we want use localStorage as cache, we can use an object instead of  a string i.e.
+   * If we want use localStorage as cache, we can use an object instead of  a string i.e.
    * { key1: value1, key2: value2, key3: value3 }, therefore, before making the API call
    * we can check if the key [ longurl ] exists in our cache [ localStorage ] and return it,
    * otherwise, fetch the value [shortUrl ] from the bitly
