@@ -13,6 +13,6 @@
 # App.jsx
 - It is highly discouraged to perform direct DOM manipulation in ReactJs i.e. `new
   ClipboardJS(".btn");` The '.btn' is treated a selector by the ClipboardJS
-  lib. You have a look [this](git@github.com:nkbt/react-copy-to-clipboard.git), I think it is a better option
+  lib. You have a look [this](git@github.com:nkbt/react-copy-to-clipboard.git) . I think it is a better option
 - Question: Why are you using Localstorage here? I think you can work without
 > If you want a cleaner way of persisting state, checkout this [lib](https://github.com/rt2zz/redux-persist)
