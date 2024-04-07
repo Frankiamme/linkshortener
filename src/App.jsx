@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ClipboardJS from "clipboard";
 import { getLimit, shortenURL } from "./lib";
-import pattern from "./regexPattern";
+import urlPattern from "./regexPattern";
 import "./App.css";
 
 /* 
@@ -38,43 +38,43 @@ function App() {
     checklimit();
   }, []);
 
-  const handleChange = (e) => {
-    setlongurl(e.target.value);
-  };
+  const handleChange = (e) => setlongurl(e.target.value);
 
   const checklimit = async () => {
     const limit = await getLimit();
     setApiLimit(limit);
-  }; 
-
-  /* If input validation is successful, a truthy value is returned, 
-  otherwise an error is thrown 
-  */
-  const validateEntry = (val) => {
-    if (pattern.test(val) === true) {
-      setErrorMessage("")
-      return true
-    } else {
-      setErrorMessage("Url entered is invalid")
-      return false
-    }
   };
+
+  /** If input validation is successful, a truthy value is returned,
+   * otherwise an error is thrown
+   *
+   * @josiah-review
+   *  - Please use custom hooks to abstract this code, this can be easily hard
+   *  to follow if we add more code
+   *  - I am renaming some of variables in this function to self-document
+   */
+  const validateUrl = (val) =>
+    urlPattern.test(val)
+      ? setErrorMessage("")
+      : setErrorMessage("Url entered is invalid");
 
   //function to handle short link generation upon submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (longurl.length < 1) {
-      setErrorMessage("The URL is a required field")
+      setErrorMessage("The URL is a required field");
       return;
     }
     if (ApiLimit < 1) {
-      setErrorMessage("Requests limit exceeded, shortener will not work :(")
+      setErrorMessage("Requests limit exceeded, shortener will not work :(");
       return;
     }
-    const validated = validateEntry(longurl);
+    const validated = validateUrl(longurl);
     if (validated) {
       const { link } = await shortenURL(longurl);
       setShortUrl(link);
+
       seturlLongLocal(longurl);
     }
   };
