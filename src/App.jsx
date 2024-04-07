@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ClipboardJS from "clipboard";
-import { getLimit, shortenURL } from "./lib";
+import { shortenURL } from "./lib";
 import urlPattern from "./regexPattern";
 import "./App.css";
 
@@ -15,10 +15,15 @@ function App() {
   const [shortUrl, setShortUrl] = useState("");
   const [urlLongLocal, seturlLongLocal] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [ApiLimit, setApiLimit] = useState(0);
 
-  /*
-  Store items in the local storage when the short url is generated
+  /**
+   * Store items in the local storage when the short url is generated
+   *
+   * I we want use localStorage as cache, we can use an object instead of  a string i.e.
+   * { key1: value1, key2: value2, key3: value3 }, therefore, before making the API call
+   * we can check if the key [ longurl ] exists in our cache [ localStorage ] and return it,
+   * otherwise, fetch the value [shortUrl ] from the bitly
+   *
   */
   useEffect(() => {
     localStorage.setItem("shortURL", JSON.stringify(shortUrl));
@@ -35,15 +40,9 @@ function App() {
       setShortUrl(resultshortURL);
       seturlLongLocal(resultlongURL);
     }
-    checklimit();
   }, []);
 
   const handleChange = (e) => setlongurl(e.target.value);
-
-  const checklimit = async () => {
-    const limit = await getLimit();
-    setApiLimit(limit);
-  };
 
   /** If input validation is successful, a truthy value is returned,
    * otherwise an error is thrown
@@ -62,20 +61,26 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (longurl.length < 1) {
-      setErrorMessage("The URL is a required field");
-      return;
-    }
-    if (ApiLimit < 1) {
-      setErrorMessage("Requests limit exceeded, shortener will not work :(");
-      return;
-    }
-    const validated = validateUrl(longurl);
-    if (validated) {
-      const { link } = await shortenURL(longurl);
-      setShortUrl(link);
+    /**
+     * @josiah-review
+     * This is redundant, validateUrl is checking for empty string as well
+     */
 
-      seturlLongLocal(longurl);
+    /**
+     * I checked the docs https://dev.bitly.com/api-reference/#createBitlink the rate limit can be captured using status 429
+     * check the screenshot on feedback.md file
+     * This approach will prevent the extra API call to check the limit
+     */
+
+    if (validateUrl(longurl)) {
+      try {
+        const { link } = await shortenURL(longurl);
+        setShortUrl(link);
+        seturlLongLocal(longurl);
+      } catch (error) {
+        // we can capture all the error messages here
+        setErrorMessage(error.message);
+      }
     }
   };
 

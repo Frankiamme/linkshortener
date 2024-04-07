@@ -16,3 +16,5 @@
   lib. This [lib](https://github.com/nkbt/react-copy-to-clipboard) can help clean this up
 - Question: Why are you using Localstorage here? I think you can work without
 > If you want a cleaner way of persisting state, checkout this [lib](https://github.com/rt2zz/redux-persist)
+- Rate limits documentation
+  - ![Rate Limit](./image/README/pic-selected-240407-1152-29.png)
