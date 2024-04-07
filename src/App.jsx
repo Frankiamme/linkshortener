@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ClipboardJS from "clipboard";
-import { getLimit, shortenURL } from "./lib";
-import pattern from "./regexPattern";
+import { shortenURL } from "./lib";
+import urlPattern from "./regexPattern";
 import "./App.css";
 
 /* 
@@ -15,10 +15,15 @@ function App() {
   const [shortUrl, setShortUrl] = useState("");
   const [urlLongLocal, seturlLongLocal] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [ApiLimit, setApiLimit] = useState(0);
 
-  /*
-  Store items in the local storage when the short url is generated
+  /**
+   * Store items in the local storage when the short url is generated
+   *
+   * If we want use localStorage as cache, we can use an object instead of  a string i.e.
+   * { key1: value1, key2: value2, key3: value3 }, therefore, before making the API call
+   * we can check if the key [ longurl ] exists in our cache [ localStorage ] and return it,
+   * otherwise, fetch the value [shortUrl ] from the bitly
+   *
   */
   useEffect(() => {
     localStorage.setItem("shortURL", JSON.stringify(shortUrl));
@@ -35,47 +40,47 @@ function App() {
       setShortUrl(resultshortURL);
       seturlLongLocal(resultlongURL);
     }
-    checklimit();
   }, []);
 
-  const handleChange = (e) => {
-    setlongurl(e.target.value);
-  };
+  const handleChange = (e) => setlongurl(e.target.value);
 
-  const checklimit = async () => {
-    const limit = await getLimit();
-    setApiLimit(limit);
-  }; 
-
-  /* If input validation is successful, a truthy value is returned, 
-  otherwise an error is thrown 
-  */
-  const validateEntry = (val) => {
-    if (pattern.test(val) === true) {
-      setErrorMessage("")
-      return true
-    } else {
-      setErrorMessage("Url entered is invalid")
-      return false
-    }
-  };
+  /** If input validation is successful, a truthy value is returned,
+   * otherwise an error is thrown
+   *
+   * @josiah-review
+   *  - Please use custom hooks to abstract this code, this can be easily hard
+   *  to follow if we add more code
+   *  - I am renaming some of variables in this function to self-document
+   */
+  const validateUrl = (val) =>
+    urlPattern.test(val)
+      ? setErrorMessage("")
+      : setErrorMessage("Url entered is invalid");
 
   //function to handle short link generation upon submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (longurl.length < 1) {
-      setErrorMessage("The URL is a required field")
-      return;
-    }
-    if (ApiLimit < 1) {
-      setErrorMessage("Requests limit exceeded, shortener will not work :(")
-      return;
-    }
-    const validated = validateEntry(longurl);
-    if (validated) {
-      const { link } = await shortenURL(longurl);
-      setShortUrl(link);
-      seturlLongLocal(longurl);
+
+    /**
+     * @josiah-review
+     * This is redundant, validateUrl is checking for empty string as well
+     */
+
+    /**
+     * I checked the docs https://dev.bitly.com/api-reference/#createBitlink the rate limit can be captured using status 429
+     * check the screenshot on feedback.md file
+     * This approach will prevent the extra API call to check the limit
+     */
+
+    if (validateUrl(longurl)) {
+      try {
+        const { link } = await shortenURL(longurl);
+        setShortUrl(link);
+        seturlLongLocal(longurl);
+      } catch (error) {
+        // we can capture all the error messages here
+        setErrorMessage(error.message);
+      }
     }
   };
 
